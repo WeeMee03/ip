@@ -4,6 +4,8 @@ public class Elena {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
+        String[] tasks = new String[100]; // fixed-size array for tasks
+        int taskCount = 0; // number of tasks stored
         String input;
 
         // Welcome message
@@ -23,10 +25,32 @@ public class Elena {
                 break;
             }
 
-            // Echo the command
-            printLine();
-            System.out.println(" " + input);
-            printLine();
+            // List all tasks
+            if (input.equalsIgnoreCase("list")) {
+                printLine();
+                if (taskCount == 0) {
+                    System.out.println(" No tasks yet.");
+                } else {
+                    for (int i = 0; i < taskCount; i++) {
+                        System.out.println(" " + (i + 1) + ". " + tasks[i]);
+                    }
+                }
+                printLine();
+                continue;
+            }
+
+            // Add task
+            if (taskCount < tasks.length) {
+                tasks[taskCount] = input;
+                taskCount++;
+                printLine();
+                System.out.println(" added: " + input);
+                printLine();
+            } else {
+                printLine();
+                System.out.println(" Task list is full! Cannot add more.");
+                printLine();
+            }
         }
 
         scanner.close();
