@@ -99,7 +99,6 @@ public class Elena {
         scanner.close();
     }
 
-    // Handle mark/unmark commands
     private static void handleMarkUnmark(String input, List<Task> tasks) throws ElenaException {
         boolean isMark = input.toLowerCase().startsWith("mark ");
         String[] parts = input.split(" ");
@@ -123,7 +122,6 @@ public class Elena {
         }
     }
 
-    // Handle delete command
     private static void handleDelete(String input, List<Task> tasks) throws ElenaException {
         String[] parts = input.split(" ");
         if (parts.length < 2) throw new ElenaException("Usage: delete <task number>");
