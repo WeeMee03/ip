@@ -4,7 +4,7 @@ public class Elena {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100]; // fixed-size array for tasks
+        Task[] tasks = new Task[100];
         int taskCount = 0;
         String input;
 
@@ -17,7 +17,6 @@ public class Elena {
         while (true) {
             input = scanner.nextLine().trim();
 
-            // Exit condition
             if (input.equalsIgnoreCase("bye")) {
                 printLine();
                 System.out.println(" Bye. Hope to see you again soon!");
@@ -25,7 +24,6 @@ public class Elena {
                 break;
             }
 
-            // List tasks
             if (input.equalsIgnoreCase("list")) {
                 printLine();
                 if (taskCount == 0) {
@@ -40,7 +38,7 @@ public class Elena {
                 continue;
             }
 
-            // Mark task as done
+            // Mark task
             if (input.toLowerCase().startsWith("mark ")) {
                 try {
                     int index = Integer.parseInt(input.split(" ")[1]) - 1;
@@ -78,9 +76,66 @@ public class Elena {
                 continue;
             }
 
-            // Add task
+            // Add tasks based on type
+            if (input.toLowerCase().startsWith("todo ")) {
+                String description = input.substring(5).trim();
+                if (!description.isEmpty() && taskCount < tasks.length) {
+                    tasks[taskCount] = new Todo(description);
+                    taskCount++;
+                    printLine();
+                    System.out.println(" Got it. I've added this task:");
+                    System.out.println("   " + tasks[taskCount - 1]);
+                    System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                    printLine();
+                }
+                continue;
+            }
+
+            if (input.toLowerCase().startsWith("deadline ")) {
+                try {
+                    String[] parts = input.substring(9).split("/by", 2);
+                    String description = parts[0].trim();
+                    String by = parts[1].trim();
+                    if (!description.isEmpty() && taskCount < tasks.length) {
+                        tasks[taskCount] = new Deadline(description, by);
+                        taskCount++;
+                        printLine();
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + tasks[taskCount - 1]);
+                        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                        printLine();
+                    }
+                } catch (Exception e) {
+                    System.out.println(" Usage: deadline <description> /by <time>");
+                }
+                continue;
+            }
+
+            if (input.toLowerCase().startsWith("event ")) {
+                try {
+                    String[] parts = input.substring(6).split("/from", 2);
+                    String description = parts[0].trim();
+                    String[] times = parts[1].split("/to", 2);
+                    String from = times[0].trim();
+                    String to = times[1].trim();
+                    if (!description.isEmpty() && taskCount < tasks.length) {
+                        tasks[taskCount] = new Event(description, from, to);
+                        taskCount++;
+                        printLine();
+                        System.out.println(" Got it. I've added this task:");
+                        System.out.println("   " + tasks[taskCount - 1]);
+                        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+                        printLine();
+                    }
+                } catch (Exception e) {
+                    System.out.println(" Usage: event <description> /from <time> /to <time>");
+                }
+                continue;
+            }
+
+            // Default: treat as Todo if unknown
             if (taskCount < tasks.length) {
-                tasks[taskCount] = new Task(input);
+                tasks[taskCount] = new Todo(input);
                 taskCount++;
                 printLine();
                 System.out.println(" added: " + input);
