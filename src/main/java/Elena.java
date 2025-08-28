@@ -1,11 +1,12 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class Elena {
 
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Task[] tasks = new Task[100];
-        int taskCount = 0;
+        List<Task> tasks = new ArrayList<>();
 
         printLine();
         System.out.println(" Hello! I'm Elena 🤖");
@@ -25,32 +26,36 @@ public class Elena {
 
                 if (input.equalsIgnoreCase("list")) {
                     printLine();
-                    if (taskCount == 0) {
+                    if (tasks.isEmpty()) {
                         System.out.println(" No tasks yet.");
                     } else {
                         System.out.println(" Here are the tasks in your list:");
-                        for (int i = 0; i < taskCount; i++) {
-                            System.out.println(" " + (i + 1) + "." + tasks[i]);
+                        for (int i = 0; i < tasks.size(); i++) {
+                            System.out.println(" " + (i + 1) + "." + tasks.get(i));
                         }
                     }
                     printLine();
                     continue;
                 }
 
+                // Mark / Unmark
                 if (input.toLowerCase().startsWith("mark ") || input.toLowerCase().startsWith("unmark ")) {
-                    handleMarkUnmark(input, tasks, taskCount);
+                    handleMarkUnmark(input, tasks);
+                    continue;
+                }
+
+                // Delete
+                if (input.toLowerCase().startsWith("delete ")) {
+                    handleDelete(input, tasks);
                     continue;
                 }
 
                 // Todo
                 if (input.equalsIgnoreCase("todo") || input.toLowerCase().startsWith("todo ")) {
-                    String description = "";
-                    if (input.length() > 4) {
-                        description = input.substring(4).trim();
-                    }
+                    String description = input.length() > 4 ? input.substring(4).trim() : "";
                     if (description.isEmpty()) throw ElenaException.emptyTodo();
-                    tasks[taskCount++] = new Todo(description);
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    tasks.add(new Todo(description));
+                    printTaskAdded(tasks.get(tasks.size() - 1), tasks.size());
                     continue;
                 }
 
@@ -60,8 +65,8 @@ public class Elena {
                     String[] parts = content.split("/by", 2);
                     if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty())
                         throw ElenaException.emptyDeadline();
-                    tasks[taskCount++] = new Deadline(parts[0].trim(), parts[1].trim());
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    tasks.add(new Deadline(parts[0].trim(), parts[1].trim()));
+                    printTaskAdded(tasks.get(tasks.size() - 1), tasks.size());
                     continue;
                 }
 
@@ -73,8 +78,8 @@ public class Elena {
                     String[] times = parts[1].split("/to", 2);
                     if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty())
                         throw ElenaException.emptyEvent();
-                    tasks[taskCount++] = new Event(parts[0].trim(), times[0].trim(), times[1].trim());
-                    printTaskAdded(tasks[taskCount - 1], taskCount);
+                    tasks.add(new Event(parts[0].trim(), times[0].trim(), times[1].trim()));
+                    printTaskAdded(tasks.get(tasks.size() - 1), tasks.size());
                     continue;
                 }
 
@@ -94,34 +99,53 @@ public class Elena {
         scanner.close();
     }
 
-    private static void handleMarkUnmark(String input, Task[] tasks, int taskCount) throws ElenaException {
+    // Handle mark/unmark commands
+    private static void handleMarkUnmark(String input, List<Task> tasks) throws ElenaException {
         boolean isMark = input.toLowerCase().startsWith("mark ");
         String[] parts = input.split(" ");
         if (parts.length < 2) throw new ElenaException("Usage: " + (isMark ? "mark" : "unmark") + " <task number>");
         try {
             int index = Integer.parseInt(parts[1]) - 1;
-            if (index < 0 || index >= taskCount) throw ElenaException.invalidTaskNumber();
+            if (index < 0 || index >= tasks.size()) throw ElenaException.invalidTaskNumber();
             if (isMark) {
-                tasks[index].markAsDone();
+                tasks.get(index).markAsDone();
                 printLine();
                 System.out.println(" Nice! I've marked this task as done:");
             } else {
-                tasks[index].markAsNotDone();
+                tasks.get(index).markAsNotDone();
                 printLine();
                 System.out.println(" OK, I've marked this task as not done yet:");
             }
-            System.out.println("   " + tasks[index]);
+            System.out.println("   " + tasks.get(index));
             printLine();
         } catch (NumberFormatException e) {
             throw ElenaException.nonIntegerTaskNumber();
         }
     }
 
-    private static void printTaskAdded(Task task, int taskCount) {
+    // Handle delete command
+    private static void handleDelete(String input, List<Task> tasks) throws ElenaException {
+        String[] parts = input.split(" ");
+        if (parts.length < 2) throw new ElenaException("Usage: delete <task number>");
+        try {
+            int index = Integer.parseInt(parts[1]) - 1;
+            if (index < 0 || index >= tasks.size()) throw ElenaException.invalidTaskNumber();
+            Task removed = tasks.remove(index);
+            printLine();
+            System.out.println(" Noted. I've removed this task:");
+            System.out.println("   " + removed);
+            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+            printLine();
+        } catch (NumberFormatException e) {
+            throw ElenaException.nonIntegerTaskNumber();
+        }
+    }
+
+    private static void printTaskAdded(Task task, int size) {
         printLine();
         System.out.println(" Got it. I've added this task:");
         System.out.println("   " + task);
-        System.out.println(" Now you have " + taskCount + " tasks in the list.");
+        System.out.println(" Now you have " + size + " tasks in the list.");
         printLine();
     }
 
