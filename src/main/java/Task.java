@@ -1,27 +1,28 @@
 public abstract class Task {
     protected String description;
     protected boolean isDone;
-    protected TaskType type;
 
-    public Task(String description, TaskType type) {
+    public Task(String description, boolean isDone) {
         this.description = description;
-        this.type = type;
-        this.isDone = false;
+        this.isDone = isDone;
     }
 
     public String getStatusIcon() {
         return isDone ? "X" : " ";
     }
 
-    public TaskType getType() {
-        return type;
+    public boolean isDone() {
+        return isDone;
     }
 
     public void markAsDone() { isDone = true; }
     public void markAsNotDone() { isDone = false; }
 
+    // Format for saving to file
+    public abstract String toSaveFormat();
+
     @Override
     public String toString() {
-        return "[" + type.getCode() + "][" + getStatusIcon() + "] " + description;
+        return "[" + getStatusIcon() + "] " + description;
     }
 }
