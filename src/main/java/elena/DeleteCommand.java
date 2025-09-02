@@ -1,20 +1,21 @@
-public class MarkCommand implements Command {
+package elena;
+
+public class DeleteCommand implements Command {
     private final String input;
 
-    public MarkCommand(String input) {
+    public DeleteCommand(String input) {
         this.input = input;
     }
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws ElenaException {
-        int index = parseIndex(input, "mark");
-        Task task = tasks.get(index);
-        task.markAsDone();
-        ui.showMessage("Nice! I've marked this task as done:\n  " + task);
+        int index = parseIndex(input);
+        Task removed = tasks.delete(index);
+        ui.showMessage("Noted. I've removed this task:\n  " + removed + "\nNow you have " + tasks.size() + " tasks in the list.");
         storage.save(tasks.getAll());
     }
 
-    private int parseIndex(String input, String command) throws ElenaException {
+    private int parseIndex(String input) throws ElenaException {
         try {
             int idx = Integer.parseInt(input.split(" ")[1]) - 1;
             if (idx < 0) throw ElenaException.invalidTaskNumber();

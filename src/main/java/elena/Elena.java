@@ -1,3 +1,5 @@
+package elena;
+
 import java.util.List;
 import java.util.Scanner;
 
@@ -9,7 +11,7 @@ public class Elena {
         List<Task> tasks = storage.load(); // load tasks at startup
 
         printLine();
-        System.out.println(" Hello! I'm Elena 🤖");
+        System.out.println(" Hello! I'm elena.Elena 🤖");
         System.out.println(" What can I do for you?");
         printLine();
 
@@ -52,7 +54,7 @@ public class Elena {
                     continue;
                 }
 
-                // Parse all other commands through Parser
+                // Parse all other commands through elena.Parser
                 Task task = Parser.parseTask(input);
                 tasks.add(task);
                 printTaskAdded(task, tasks.size());

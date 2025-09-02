@@ -1,3 +1,5 @@
+package elena;
+
 import java.time.format.DateTimeParseException;
 
 public class AddEventCommand implements Command {

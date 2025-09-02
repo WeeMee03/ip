@@ -1,3 +1,5 @@
+package elena;
+
 public enum TaskType {
     TODO("T"), DEADLINE("D"), EVENT("E");
     private final String code;
