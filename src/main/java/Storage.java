@@ -1,10 +1,13 @@
 import java.io.*;
 import java.nio.file.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
 public class Storage {
     private final Path filePath;
+    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
     public Storage(String filePath) {
         this.filePath = Paths.get(filePath);
@@ -48,7 +51,7 @@ public class Storage {
         }
     }
 
-    private Task decode(String line) throws ElenaException {
+    private Task decode(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
         boolean isDone = parts[1].equals("1");
@@ -60,9 +63,12 @@ public class Storage {
                 task = new Todo(description);
                 break;
             case "D":
+                LocalDateTime by = LocalDateTime.parse(parts[3], INPUT_FORMAT);
                 task = new Deadline(description, parts[3]);
                 break;
             case "E":
+                LocalDateTime from = LocalDateTime.parse(parts[3], INPUT_FORMAT);
+                LocalDateTime to = LocalDateTime.parse(parts[4], INPUT_FORMAT);
                 task = new Event(description, parts[3], parts[4]);
                 break;
             default:

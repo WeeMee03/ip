@@ -2,10 +2,11 @@ import java.util.List;
 import java.util.Scanner;
 
 public class Elena {
+
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Storage storage = new Storage("./data/elena.txt");
-        List<Task> tasks = storage.load();
+        List<Task> tasks = storage.load(); // load tasks at startup
 
         printLine();
         System.out.println(" Hello! I'm Elena 🤖");
@@ -40,54 +41,22 @@ public class Elena {
                 // Mark / Unmark
                 if (input.toLowerCase().startsWith("mark ") || input.toLowerCase().startsWith("unmark ")) {
                     handleMarkUnmark(input, tasks);
-                    storage.save(tasks);
+                    storage.save(tasks); // auto save
                     continue;
                 }
 
                 // Delete
                 if (input.toLowerCase().startsWith("delete ")) {
                     handleDelete(input, tasks);
-                    storage.save(tasks);
+                    storage.save(tasks); // auto save
                     continue;
                 }
 
-                // Todo
-                if (input.equalsIgnoreCase("todo") || input.toLowerCase().startsWith("todo ")) {
-                    String description = input.length() > 4 ? input.substring(4).trim() : "";
-                    if (description.isEmpty()) throw ElenaException.emptyTodo();
-                    tasks.add(new Todo(description));
-                    printTaskAdded(tasks.get(tasks.size() - 1), tasks.size());
-                    storage.save(tasks);
-                    continue;
-                }
-
-                // Deadline
-                if (input.equalsIgnoreCase("deadline") || input.toLowerCase().startsWith("deadline ")) {
-                    String content = input.length() > 8 ? input.substring(8).trim() : "";
-                    String[] parts = content.split("/by", 2);
-                    if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty())
-                        throw ElenaException.emptyDeadline();
-                    tasks.add(new Deadline(parts[0].trim(), parts[1].trim()));
-                    printTaskAdded(tasks.get(tasks.size() - 1), tasks.size());
-                    storage.save(tasks);
-                    continue;
-                }
-
-                // Event
-                if (input.equalsIgnoreCase("event") || input.toLowerCase().startsWith("event ")) {
-                    String content = input.length() > 5 ? input.substring(5).trim() : "";
-                    String[] parts = content.split("/from", 2);
-                    if (parts.length < 2 || parts[0].trim().isEmpty()) throw ElenaException.emptyEvent();
-                    String[] times = parts[1].split("/to", 2);
-                    if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty())
-                        throw ElenaException.emptyEvent();
-                    tasks.add(new Event(parts[0].trim(), times[0].trim(), times[1].trim()));
-                    printTaskAdded(tasks.get(tasks.size() - 1), tasks.size());
-                    storage.save(tasks);
-                    continue;
-                }
-
-                throw ElenaException.invalidCommand(input);
+                // Parse all other commands through Parser
+                Task task = Parser.parseTask(input);
+                tasks.add(task);
+                printTaskAdded(task, tasks.size());
+                storage.save(tasks); // auto save
 
             } catch (ElenaException e) {
                 printLine();

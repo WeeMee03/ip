@@ -1,6 +1,5 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
 
 public class Event extends Task {
     private LocalDateTime from;
@@ -8,15 +7,14 @@ public class Event extends Task {
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
 
-    public Event(String description, String fromString, String toString) throws ElenaException {
+    public Event(String description, String from, String to) {
         super(description, TaskType.EVENT);
-        try {
-            this.from = LocalDateTime.parse(fromString, INPUT_FORMAT);
-            this.to = LocalDateTime.parse(toString, INPUT_FORMAT);
-        } catch (DateTimeParseException e) {
-            throw ElenaException.invalidDateTime(fromString + " or " + toString);
-        }
+        this.from = LocalDateTime.parse(from, INPUT_FORMAT);
+        this.to = LocalDateTime.parse(to, INPUT_FORMAT);
     }
+
+    public LocalDateTime getFrom() { return from; }
+    public LocalDateTime getTo() { return to; }
 
     @Override
     public String toSaveFormat() {
@@ -27,7 +25,4 @@ public class Event extends Task {
     public String toString() {
         return super.toString() + " (from: " + from.format(OUTPUT_FORMAT) + " to: " + to.format(OUTPUT_FORMAT) + ")";
     }
-
-    public LocalDateTime getFrom() { return from; }
-    public LocalDateTime getTo() { return to; }
 }

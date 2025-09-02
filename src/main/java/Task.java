@@ -9,24 +9,14 @@ public abstract class Task {
         this.isDone = false;
     }
 
-    public String getStatusIcon() {
-        return isDone ? "X" : " ";
-    }
-
-    public TaskType getType() {
-        return type;
-    }
-
     public void markAsDone() { isDone = true; }
     public void markAsNotDone() { isDone = false; }
-
     public boolean isDone() { return isDone; }
 
-    // format for saving into file
     public abstract String toSaveFormat();
 
     @Override
     public String toString() {
-        return "[" + type.getCode() + "][" + getStatusIcon() + "] " + description;
+        return "[" + type.getCode() + "][" + (isDone ? "X" : " ") + "] " + description;
     }
 }
