@@ -1,5 +1,8 @@
 package elena;
 
+/**
+ * Command to delete a task by index.
+ */
 public class DeleteCommand implements Command {
     private final String input;
 

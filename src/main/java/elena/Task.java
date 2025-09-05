@@ -1,5 +1,8 @@
 package elena;
 
+/**
+ * Abstract base class for all tasks.
+ */
 public abstract class Task {
     protected String description;
     protected boolean isDone;
@@ -11,10 +14,16 @@ public abstract class Task {
         this.isDone = false;
     }
 
+    /** Marks the task as done. */
     public void markAsDone() { isDone = true; }
+
+    /** Marks the task as not done. */
     public void markAsNotDone() { isDone = false; }
+
+    /** Returns true if the task is done. */
     public boolean isDone() { return isDone; }
 
+    /** Returns the string used for saving to file. */
     public abstract String toSaveFormat();
 
     @Override

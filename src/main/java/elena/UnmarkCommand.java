@@ -1,5 +1,8 @@
 package elena;
 
+/**
+ * Command to mark a task as not done.
+ */
 public class UnmarkCommand implements Command {
     private final String input;
 

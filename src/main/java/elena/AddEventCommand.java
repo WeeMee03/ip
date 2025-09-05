@@ -2,12 +2,17 @@ package elena;
 
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a command to add an Event task.
+ */
 public class AddEventCommand implements Command {
     private final String input;
 
-    public AddEventCommand(String input) {
-        this.input = input;
-    }
+    /**
+     * Constructs a new AddEventCommand.
+     * @param input the full user input starting with "event"
+     */
+    public AddEventCommand(String input) { this.input = input; }
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws ElenaException {

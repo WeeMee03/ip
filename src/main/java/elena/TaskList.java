@@ -3,38 +3,33 @@ package elena;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Represents a list of tasks and provides methods to manipulate it.
+ */
 public class TaskList {
     private List<Task> tasks;
 
-    public TaskList() {
-        tasks = new ArrayList<>();
-    }
+    /** Creates an empty TaskList. */
+    public TaskList() { tasks = new ArrayList<>(); }
 
-    public TaskList(List<Task> tasks) {
-        this.tasks = new ArrayList<>(tasks);
-    }
+    /** Creates a TaskList with pre-existing tasks. */
+    public TaskList(List<Task> tasks) { this.tasks = new ArrayList<>(tasks); }
 
-    public void add(Task task) {
-        tasks.add(task);
-    }
+    /** Adds a task to the list. */
+    public void add(Task task) { tasks.add(task); }
 
-    public Task delete(int index) {
-        return tasks.remove(index);
-    }
+    /** Deletes a task by index and returns it. */
+    public Task delete(int index) { return tasks.remove(index); }
 
-    public Task get(int index) {
-        return tasks.get(index);
-    }
+    /** Gets a task by index. */
+    public Task get(int index) { return tasks.get(index); }
 
-    public int size() {
-        return tasks.size();
-    }
+    /** Returns the number of tasks. */
+    public int size() { return tasks.size(); }
 
-    public List<Task> getAll() {
-        return new ArrayList<>(tasks);
-    }
+    /** Returns all tasks as a new list. */
+    public List<Task> getAll() { return new ArrayList<>(tasks); }
 
-    public boolean isEmpty() {
-        return tasks.isEmpty();
-    }
+    /** Returns true if there are no tasks. */
+    public boolean isEmpty() { return tasks.isEmpty(); }
 }

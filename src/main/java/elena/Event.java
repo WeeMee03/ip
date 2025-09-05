@@ -1,5 +1,8 @@
 package elena;
 
+/**
+ * Represents an Event task with a start and end time.
+ */
 public class Event extends Task {
     private final String from;
     private final String to;
@@ -10,18 +13,15 @@ public class Event extends Task {
         this.to = to;
     }
 
-    public String getFrom() {
-        return from;
-    }
+    /** Returns the start time. */
+    public String getFrom() { return from; }
 
-    public String getTo() {
-        return to;
-    }
+    /** Returns the end time. */
+    public String getTo() { return to; }
 
     @Override
     public String toSaveFormat() {
-        return type.getCode() + " | " + (isDone ? "1" : "0") + " | "
-                + description + " | " + from + " | " + to;
+        return type.getCode() + " | " + (isDone ? "1" : "0") + " | " + description + " | " + from + " | " + to;
     }
 
     @Override

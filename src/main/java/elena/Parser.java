@@ -4,10 +4,19 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Parses user input into Task objects.
+ */
 public class Parser {
     private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
 
+    /**
+     * Parses a user input string into a Task object.
+     * @param input user input
+     * @return Task object corresponding to input
+     * @throws ElenaException if input format or command is invalid
+     */
     public static Task parseTask(String input) throws ElenaException {
         String[] parts = input.split(" ", 2);
         String command = parts[0].toLowerCase();

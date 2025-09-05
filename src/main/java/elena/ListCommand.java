@@ -1,5 +1,8 @@
 package elena;
 
+/**
+ * Command to list all tasks.
+ */
 public class ListCommand implements Command {
     public void execute(TaskList tasks, Ui ui, Storage storage) {
         if (tasks.isEmpty()) ui.showMessage("No tasks yet.");

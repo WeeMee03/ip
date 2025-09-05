@@ -2,6 +2,9 @@ package elena;
 
 import java.util.Scanner;
 
+/**
+ * Handles all input/output operations with the user.
+ */
 public class Ui {
     private Scanner scanner;
 
@@ -9,6 +12,7 @@ public class Ui {
         scanner = new Scanner(System.in);
     }
 
+    /** Displays the welcome message. */
     public void showWelcome() {
         showLine();
         System.out.println(" Hello! I'm elena.Elena 🤖");
@@ -16,23 +20,18 @@ public class Ui {
         showLine();
     }
 
-    public void showLine() {
-        System.out.println("____________________________________________________________");
-    }
+    /** Displays a horizontal line separator. */
+    public void showLine() { System.out.println("____________________________________________________________"); }
 
-    public void showMessage(String message) {
-        System.out.println(message);
-    }
+    /** Displays a message to the user. */
+    public void showMessage(String message) { System.out.println(message); }
 
-    public void showError(String message) {
-        System.out.println(" OOPS!!! " + message);
-    }
+    /** Displays an error message to the user. */
+    public void showError(String message) { System.out.println(" OOPS!!! " + message); }
 
-    public String readCommand() {
-        return scanner.nextLine().trim();
-    }
+    /** Reads a line of input from the user. */
+    public String readCommand() { return scanner.nextLine().trim(); }
 
-    public void close() {
-        scanner.close();
-    }
+    /** Closes the input scanner. */
+    public void close() { scanner.close(); }
 }

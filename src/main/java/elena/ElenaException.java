@@ -1,23 +1,31 @@
 package elena;
 
+/**
+ * Represents an exception thrown by Elena for invalid input or operations.
+ */
 public class ElenaException extends Exception {
     public ElenaException(String message) { super(message); }
 
     public static ElenaException emptyTodo() {
         return new ElenaException("Your todo cannot be empty! Please type something after 'todo'.");
     }
+
     public static ElenaException emptyDeadline() {
         return new ElenaException("elena.Deadline missing description or /by time! Use: deadline <desc> /by <time>");
     }
+
     public static ElenaException emptyEvent() {
         return new ElenaException("elena.Event missing description or time! Use: event <desc> /from <start> /to <end>");
     }
+
     public static ElenaException invalidCommand(String command) {
         return new ElenaException("Oops! I don't understand '" + command + "'. Try a valid command.");
     }
+
     public static ElenaException invalidTaskNumber() {
         return new ElenaException("The task number you provided is invalid. Make sure it exists in your list.");
     }
+
     public static ElenaException nonIntegerTaskNumber() {
         return new ElenaException("elena.Task number must be a whole number. Example: mark 2");
     }

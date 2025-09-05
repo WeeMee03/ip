@@ -1,5 +1,8 @@
 package elena;
 
+/**
+ * Command to mark a task as done.
+ */
 public class MarkCommand implements Command {
     private final String input;
 

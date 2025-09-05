@@ -2,13 +2,29 @@ package elena;
 
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a command to add a Deadline task.
+ */
 public class AddDeadlineCommand implements Command {
     private final String input;
 
+    /**
+     * Constructs a new AddDeadlineCommand.
+     * @param input the full user input starting with "deadline"
+     */
     public AddDeadlineCommand(String input) {
         this.input = input;
     }
 
+    /**
+     * Executes the command to add a Deadline task to the task list.
+     * Saves updated tasks to storage and displays confirmation via UI.
+     *
+     * @param tasks   the task list to update
+     * @param ui      the user interface for displaying messages
+     * @param storage the storage for saving tasks
+     * @throws ElenaException if input format is invalid
+     */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws ElenaException {
         String content = input.substring(9).trim();
