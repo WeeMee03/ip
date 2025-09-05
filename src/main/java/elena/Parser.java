@@ -8,8 +8,10 @@ import java.time.format.DateTimeParseException;
  * Parses user input into Task objects.
  */
 public class Parser {
-    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
-    private static final DateTimeFormatter OUTPUT_FORMAT = DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+    private static final DateTimeFormatter INPUT_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    private static final DateTimeFormatter OUTPUT_FORMAT =
+            DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
 
     /**
      * Parses a user input string into a Task object.
@@ -24,36 +26,54 @@ public class Parser {
 
         switch (command) {
             case "todo":
-                if (rest.isEmpty()) throw ElenaException.emptyTodo();
-                return new Todo(rest);
-
+                return parseTodo(rest);
             case "deadline":
-                String[] deadlineParts = rest.split("/by", 2);
-                if (deadlineParts.length < 2 || deadlineParts[0].trim().isEmpty() || deadlineParts[1].trim().isEmpty())
-                    throw ElenaException.emptyDeadline();
-                LocalDateTime by = parseDateTime(deadlineParts[1].trim());
-                return new Deadline(deadlineParts[0].trim(), formatDateTime(by));
-
+                return parseDeadline(rest);
             case "event":
-                String[] eventParts = rest.split("/from", 2);
-                if (eventParts.length < 2 || eventParts[0].trim().isEmpty()) throw ElenaException.emptyEvent();
-                String[] times = eventParts[1].split("/to", 2);
-                if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty())
-                    throw ElenaException.emptyEvent();
-                LocalDateTime from = parseDateTime(times[0].trim());
-                LocalDateTime to = parseDateTime(times[1].trim());
-                return new Event(eventParts[0].trim(), formatDateTime(from), formatDateTime(to));
-
+                return parseEvent(rest);
             default:
                 throw ElenaException.invalidCommand(input);
         }
+    }
+
+    private static Todo parseTodo(String rest) throws ElenaException {
+        if (rest.isEmpty()) {
+            throw ElenaException.emptyTodo();
+        }
+        return new Todo(rest);
+    }
+
+    private static Deadline parseDeadline(String rest) throws ElenaException {
+        String[] parts = rest.split("/by", 2);
+        if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+            throw ElenaException.emptyDeadline();
+        }
+        LocalDateTime by = parseDateTime(parts[1].trim());
+        return new Deadline(parts[0].trim(), formatDateTime(by));
+    }
+
+    private static Event parseEvent(String rest) throws ElenaException {
+        String[] parts = rest.split("/from", 2);
+        if (parts.length < 2 || parts[0].trim().isEmpty()) {
+            throw ElenaException.emptyEvent();
+        }
+
+        String[] times = parts[1].split("/to", 2);
+        if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
+            throw ElenaException.emptyEvent();
+        }
+
+        LocalDateTime from = parseDateTime(times[0].trim());
+        LocalDateTime to = parseDateTime(times[1].trim());
+        return new Event(parts[0].trim(), formatDateTime(from), formatDateTime(to));
     }
 
     private static LocalDateTime parseDateTime(String s) throws ElenaException {
         try {
             return LocalDateTime.parse(s, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
-            throw new ElenaException("Invalid date/time format! Use yyyy-MM-dd HHmm. Example: 2025-09-02 1800");
+            throw new ElenaException(
+                    "Invalid date/time format! Use yyyy-MM-dd HHmm. Example: 2025-09-02 1800");
         }
     }
 

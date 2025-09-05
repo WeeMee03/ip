@@ -1,6 +1,7 @@
 package elena;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -11,8 +12,10 @@ import java.util.List;
  * Handles saving and loading tasks to/from a text file.
  */
 public class Storage {
+
     private final Path filePath;
-    private static final DateTimeFormatter INPUT_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+    private static final DateTimeFormatter INPUT_FORMAT =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
     /**
      * Constructs a Storage object.
@@ -32,9 +35,8 @@ public class Storage {
         List<Task> tasks = new ArrayList<>();
         try {
             if (!Files.exists(filePath)) {
-                Files.createDirectories(filePath.getParent());
-                Files.createFile(filePath);
-                return tasks; // empty list on first run
+                createFileIfMissing();
+                return tasks;
             }
 
             List<String> lines = Files.readAllLines(filePath);
@@ -46,6 +48,7 @@ public class Storage {
                     System.out.println("Skipping corrupted line: " + line);
                 }
             }
+
         } catch (IOException e) {
             System.out.println("Error loading file: " + e.getMessage());
         }
@@ -88,19 +91,34 @@ public class Storage {
                 task = new Todo(description);
                 break;
             case "D":
-                LocalDateTime by = LocalDateTime.parse(parts[3], INPUT_FORMAT);
-                task = new Deadline(description, parts[3]);
+                task = decodeDeadline(parts);
                 break;
             case "E":
-                LocalDateTime from = LocalDateTime.parse(parts[3], INPUT_FORMAT);
-                LocalDateTime to = LocalDateTime.parse(parts[4], INPUT_FORMAT);
-                task = new Event(description, parts[3], parts[4]);
+                task = decodeEvent(parts);
                 break;
             default:
                 throw new IllegalArgumentException("Invalid task type: " + type);
         }
 
-        if (isDone) task.markAsDone();
+        if (isDone) {
+            task.markAsDone();
+        }
         return task;
+    }
+
+    private Task decodeDeadline(String[] parts) {
+        LocalDateTime by = LocalDateTime.parse(parts[3], INPUT_FORMAT);
+        return new Deadline(parts[2], parts[3]);
+    }
+
+    private Task decodeEvent(String[] parts) {
+        LocalDateTime from = LocalDateTime.parse(parts[3], INPUT_FORMAT);
+        LocalDateTime to = LocalDateTime.parse(parts[4], INPUT_FORMAT);
+        return new Event(parts[2], parts[3], parts[4]);
+    }
+
+    private void createFileIfMissing() throws IOException {
+        Files.createDirectories(filePath.getParent());
+        Files.createFile(filePath);
     }
 }

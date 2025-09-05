@@ -17,90 +17,160 @@ public class Elena {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         Storage storage = new Storage("./data/elena.txt");
-        List<Task> tasks = storage.load(); // load tasks at startup
+        List<Task> tasks = storage.load();
 
-        printLine();
-        System.out.println(" Hello! I'm elena.Elena 🤖");
-        System.out.println(" What can I do for you?");
-        printLine();
+        printWelcomeMessage();
 
         while (true) {
             String input = scanner.nextLine().trim();
 
             try {
-                if (input.equalsIgnoreCase("bye")) {
-                    printLine();
-                    System.out.println(" Bye. Hope to see you again soon!");
-                    printLine();
+                if (handleExit(input)) {
                     break;
                 }
 
-                if (input.equalsIgnoreCase("list")) {
-                    printLine();
-                    if (tasks.isEmpty()) {
-                        System.out.println(" No tasks yet.");
-                    } else {
-                        System.out.println(" Here are the tasks in your list:");
-                        for (int i = 0; i < tasks.size(); i++) {
-                            System.out.println(" " + (i + 1) + "." + tasks.get(i));
-                        }
-                    }
-                    printLine();
+                if (handleList(input, tasks)) {
                     continue;
                 }
 
-                // Mark / Unmark
-                if (input.toLowerCase().startsWith("mark ") || input.toLowerCase().startsWith("unmark ")) {
-                    handleMarkUnmark(input, tasks);
-                    storage.save(tasks); // auto save
+                if (handleMarkUnmark(input, tasks)) {
+                    storage.save(tasks);
                     continue;
                 }
 
-                // Delete
-                if (input.toLowerCase().startsWith("delete ")) {
-                    handleDelete(input, tasks);
-                    storage.save(tasks); // auto save
+                if (handleDelete(input, tasks)) {
+                    storage.save(tasks);
                     continue;
                 }
 
-                // Parse all other commands through elena.Parser
                 Task task = Parser.parseTask(input);
                 tasks.add(task);
                 printTaskAdded(task, tasks.size());
-                storage.save(tasks); // auto save
+                storage.save(tasks);
 
             } catch (ElenaException e) {
-                printLine();
-                System.out.println(" OOPS!!! " + e.getMessage());
-                printLine();
+                printError(e.getMessage());
             } catch (Exception e) {
-                printLine();
-                System.out.println(" OOPS!!! Something went wrong: " + e.getMessage());
-                printLine();
+                printError("Something went wrong: " + e.getMessage());
             }
         }
 
         scanner.close();
     }
 
+    private static void printWelcomeMessage() {
+        printLine();
+        System.out.println(" Hello! I'm elena.Elena 🤖");
+        System.out.println(" What can I do for you?");
+        printLine();
+    }
+
+    private static boolean handleExit(String input) {
+        if (input.equalsIgnoreCase("bye")) {
+            printLine();
+            System.out.println(" Bye. Hope to see you again soon!");
+            printLine();
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean handleList(String input, List<Task> tasks) {
+        if (!input.equalsIgnoreCase("list")) {
+            return false;
+        }
+
+        printLine();
+        if (tasks.isEmpty()) {
+            System.out.println(" No tasks yet.");
+        } else {
+            System.out.println(" Here are the tasks in your list:");
+            for (int i = 0; i < tasks.size(); i++) {
+                System.out.println(" " + (i + 1) + ". " + tasks.get(i));
+            }
+        }
+        printLine();
+        return true;
+    }
+
     /**
      * Handles mark and unmark commands for tasks.
      * @param input user input
      * @param tasks current list of tasks
+     * @return true if handled, false otherwise
      * @throws ElenaException if task number is invalid
      */
-    private static void handleMarkUnmark(String input, List<Task> tasks) throws ElenaException {
-        // method body unchanged
+    private static boolean handleMarkUnmark(String input, List<Task> tasks)
+            throws ElenaException {
+        boolean isMark = input.toLowerCase().startsWith("mark ");
+        boolean isUnmark = input.toLowerCase().startsWith("unmark ");
+        if (!isMark && !isUnmark) {
+            return false;
+        }
+
+        String[] parts = input.split(" ");
+        if (parts.length < 2) {
+            throw new ElenaException(
+                    "Usage: " + (isMark ? "mark" : "unmark") + " <task number>");
+        }
+
+        try {
+            int index = Integer.parseInt(parts[1]) - 1;
+            if (index < 0 || index >= tasks.size()) {
+                throw ElenaException.invalidTaskNumber();
+            }
+
+            Task task = tasks.get(index);
+            printLine();
+            if (isMark) {
+                task.markAsDone();
+                System.out.println(" Nice! I've marked this task as done:");
+            } else {
+                task.markAsNotDone();
+                System.out.println(" OK, I've marked this task as not done yet:");
+            }
+            System.out.println("   " + task);
+            printLine();
+            return true;
+        } catch (NumberFormatException e) {
+            throw ElenaException.nonIntegerTaskNumber();
+        }
     }
 
     /**
      * Handles delete command for tasks.
      * @param input user input
      * @param tasks current list of tasks
+     * @return true if handled, false otherwise
      * @throws ElenaException if task number is invalid
      */
-    private static void handleDelete(String input, List<Task> tasks) throws ElenaException {
-        // method body unchanged
+    private static boolean handleDelete(String input, List<Task> tasks)
+            throws ElenaException {
+        if (!input.toLowerCase().startsWith("delete ")) {
+            return false;
+        }
+
+        String[] parts = input.split(" ");
+        if (parts.length < 2) {
+            throw new ElenaException("Usage: delete <task number>");
+        }
+
+        try {
+            int index = Integer.parseInt(parts[1]) - 1;
+            if (index < 0 || index >= tasks.size()) {
+                throw ElenaException.invalidTaskNumber();
+            }
+
+            Task removed = tasks.remove(index);
+            printLine();
+            System.out.println(" Noted. I've removed this task:");
+            System.out.println("   " + removed);
+            System.out.println(" Now you have " + tasks.size() + " tasks in the list.");
+            printLine();
+            return true;
+        } catch (NumberFormatException e) {
+            throw ElenaException.nonIntegerTaskNumber();
+        }
     }
 
     /**
@@ -109,11 +179,21 @@ public class Elena {
      * @param size current number of tasks
      */
     private static void printTaskAdded(Task task, int size) {
-        // method body unchanged
+        printLine();
+        System.out.println(" Got it. I've added this task:");
+        System.out.println("   " + task);
+        System.out.println(" Now you have " + size + " tasks in the list.");
+        printLine();
     }
 
     /** Prints a horizontal line separator. */
     private static void printLine() {
         System.out.println("____________________________________________________________");
+    }
+
+    private static void printError(String message) {
+        printLine();
+        System.out.println(" OOPS!!! " + message);
+        printLine();
     }
 }
