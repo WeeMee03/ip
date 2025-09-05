@@ -6,6 +6,7 @@ import java.time.format.DateTimeParseException;
 
 /**
  * Parses user input into Task objects.
+ * Only handles actual tasks: Todo, Deadline, Event.
  */
 public class Parser {
     private static final DateTimeFormatter INPUT_FORMAT =

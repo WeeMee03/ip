@@ -43,6 +43,12 @@ public class Elena {
                     continue;
                 }
 
+                // Handle find command
+                if (handleFind(input, tasks)) {
+                    continue;
+                }
+
+                // Parse all other tasks through Parser
                 Task task = Parser.parseTask(input);
                 tasks.add(task);
                 printTaskAdded(task, tasks.size());
@@ -171,6 +177,41 @@ public class Elena {
         } catch (NumberFormatException e) {
             throw ElenaException.nonIntegerTaskNumber();
         }
+    }
+
+    /**
+     * Handles find command for tasks.
+     * @param input user input
+     * @param tasks current list of tasks
+     * @return true if handled, false otherwise
+     * @throws ElenaException if keyword is missing
+     */
+    private static boolean handleFind(String input, List<Task> tasks)
+            throws ElenaException {
+        if (!input.toLowerCase().startsWith("find ")) {
+            return false;
+        }
+
+        String keyword = input.substring(5).trim();
+        if (keyword.isEmpty()) {
+            throw new ElenaException("Usage: find <keyword>");
+        }
+
+        printLine();
+        System.out.println(" Here are the matching tasks in your list:");
+        int count = 0;
+        for (int i = 0; i < tasks.size(); i++) {
+            Task task = tasks.get(i);
+            if (task.toString().toLowerCase().contains(keyword.toLowerCase())) {
+                count++;
+                System.out.println(" " + count + ". " + task);
+            }
+        }
+        if (count == 0) {
+            System.out.println(" No matching tasks found.");
+        }
+        printLine();
+        return true;
     }
 
     /**
