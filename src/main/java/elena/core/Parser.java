@@ -21,6 +21,8 @@ public class Parser {
             DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
 
     public static Task parseTask(String input) throws ElenaException {
+        assert input != null : "Input should not be null";
+
         String[] parts = input.split(" ", 2);
         String command = parts[0].toLowerCase();
         String rest = parts.length > 1 ? parts[1].trim() : "";
@@ -38,6 +40,9 @@ public class Parser {
     }
 
     private static Todo parseTodo(String rest) throws ElenaException {
+        assert rest != null : "Todo description should not be null";
+        assert !rest.isEmpty() : "Todo description should not be empty";
+
         if (rest.isEmpty()) {
             throw ElenaException.emptyTodo();
         }
@@ -45,7 +50,13 @@ public class Parser {
     }
 
     private static Deadline parseDeadline(String rest) throws ElenaException {
+        assert rest != null : "Deadline input should not be null";
+
         String[] parts = rest.split("/by", 2);
+        assert parts.length == 2 : "Deadline must have a /by part";
+        assert !parts[0].trim().isEmpty() : "Deadline description should not be empty";
+        assert !parts[1].trim().isEmpty() : "Deadline date/time should not be empty";
+
         if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
             throw ElenaException.emptyDeadline();
         }
@@ -55,12 +66,17 @@ public class Parser {
     }
 
     private static Event parseEvent(String rest) throws ElenaException {
+        assert rest != null : "Event input should not be null";
+
         String[] parts = rest.split("/from", 2);
-        if (parts.length < 2 || parts[0].trim().isEmpty()) {
-            throw ElenaException.emptyEvent();
-        }
+        assert parts.length == 2 : "Event must have /from part";
+        assert !parts[0].trim().isEmpty() : "Event description should not be empty";
 
         String[] times = parts[1].split("/to", 2);
+        assert times.length == 2 : "Event must have /to part";
+        assert !times[0].trim().isEmpty() : "Event start time should not be empty";
+        assert !times[1].trim().isEmpty() : "Event end time should not be empty";
+
         if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
             throw ElenaException.emptyEvent();
         }
@@ -71,6 +87,8 @@ public class Parser {
     }
 
     private static LocalDateTime parseDateTime(String s) throws ElenaException {
+        assert s != null : "Date/time string should not be null";
+
         try {
             return LocalDateTime.parse(s, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
@@ -80,6 +98,7 @@ public class Parser {
     }
 
     private static String formatDateTime(LocalDateTime dt) {
+        assert dt != null : "Date/time object should not be null";
         return dt.format(OUTPUT_FORMAT);
     }
 }

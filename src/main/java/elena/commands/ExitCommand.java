@@ -10,6 +10,7 @@ import elena.core.Ui;
 public class ExitCommand implements Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
+        assert ui != null : "Ui should not be null";
         ui.showMessage("Bye. Hope to see you again!");
     }
 

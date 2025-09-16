@@ -20,14 +20,19 @@ public class FindCommand implements Command {
      * @param keyword Keyword to search for.
      */
     public FindCommand(String keyword) {
+        assert keyword != null : "Keyword should not be null";
         this.keyword = keyword;
     }
 
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) {
+        assert tasks != null : "TaskList should not be null";
+        assert ui != null : "Ui should not be null";
+
         List<Task> matched = new ArrayList<>();
         for (Task task : tasks.getAll()) {
-            if (task.description.toLowerCase().contains(keyword.toLowerCase())) {
+            assert task != null : "Task in list should not be null";
+            if (task.getDescription().toLowerCase().contains(keyword.toLowerCase())) {
                 matched.add(task);
             }
         }

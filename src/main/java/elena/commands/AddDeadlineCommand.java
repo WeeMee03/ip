@@ -20,6 +20,7 @@ public class AddDeadlineCommand implements Command {
      * @param input the full user input starting with "deadline"
      */
     public AddDeadlineCommand(String input) {
+        assert input != null : "Input should not be null";
         this.input = input;
     }
 
@@ -34,8 +35,16 @@ public class AddDeadlineCommand implements Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws ElenaException {
+        assert input.startsWith("deadline") : "Input must start with 'deadline'";
+
         String content = input.substring(9).trim();
+        assert !content.isEmpty() : "Deadline content should not be empty";
+
         String[] parts = content.split("/by", 2);
+        assert parts.length == 2 : "Deadline input must contain /by";
+        assert !parts[0].trim().isEmpty() : "Deadline description should not be empty";
+        assert !parts[1].trim().isEmpty() : "Deadline date/time should not be empty";
+
         if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
             throw ElenaException.emptyDeadline();
         }

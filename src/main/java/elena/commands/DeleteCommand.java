@@ -18,6 +18,7 @@ public class DeleteCommand implements Command {
      * @param input full user input string
      */
     public DeleteCommand(String input) {
+        assert input != null : "Input should not be null";
         this.input = input;
     }
 
@@ -32,6 +33,8 @@ public class DeleteCommand implements Command {
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws ElenaException {
         int index = parseIndex(input);
+        assert index >= 0 && index < tasks.size() : "Index must be within task list bounds";
+
         Task removed = tasks.delete(index);
         ui.showMessage("Noted. I've removed this task:\n  "
                 + removed + "\nNow you have " + tasks.size() + " tasks in the list.");
@@ -41,6 +44,7 @@ public class DeleteCommand implements Command {
     private int parseIndex(String input) throws ElenaException {
         try {
             int idx = Integer.parseInt(input.split(" ")[1]) - 1;
+            assert idx >= 0 : "Task number must be positive";
             if (idx < 0) {
                 throw ElenaException.invalidTaskNumber();
             }

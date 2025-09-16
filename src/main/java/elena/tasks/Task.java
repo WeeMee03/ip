@@ -38,6 +38,11 @@ public abstract class Task {
     /** Returns the string used for saving to file. */
     public abstract String toSaveFormat();
 
+    /** Getter for task description */
+    public String getDescription() {
+        return description;
+    }
+
     @Override
     public String toString() {
         return "[" + type.getCode() + "][" + (isDone ? "X" : " ") + "] " + description;

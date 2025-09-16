@@ -18,6 +18,7 @@ public class AddTodoCommand implements Command {
      * @param input the full user input starting with "todo"
      */
     public AddTodoCommand(String input) {
+        assert input != null : "Input should not be null";
         this.input = input;
     }
 
@@ -32,7 +33,11 @@ public class AddTodoCommand implements Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws ElenaException {
+        assert input.startsWith("todo") : "Input must start with 'todo'";
+
         String description = input.substring(5).trim();
+        assert !description.isEmpty() : "Todo description should not be empty";
+
         if (description.isEmpty()) {
             throw ElenaException.emptyTodo();
         }

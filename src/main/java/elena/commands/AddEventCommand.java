@@ -20,6 +20,7 @@ public class AddEventCommand implements Command {
      * @param input the full user input starting with "event"
      */
     public AddEventCommand(String input) {
+        assert input != null : "Input should not be null";
         this.input = input;
     }
 
@@ -34,13 +35,20 @@ public class AddEventCommand implements Command {
      */
     @Override
     public void execute(TaskList tasks, Ui ui, Storage storage) throws ElenaException {
+        assert input.startsWith("event") : "Input must start with 'event'";
+
         String content = input.substring(6).trim();
+        assert !content.isEmpty() : "Event content should not be empty";
+
         String[] parts = content.split("/from", 2);
-        if (parts.length < 2 || parts[0].trim().isEmpty()) {
-            throw ElenaException.emptyEvent();
-        }
+        assert parts.length == 2 : "Event input must contain /from";
+        assert !parts[0].trim().isEmpty() : "Event description should not be empty";
 
         String[] times = parts[1].split("/to", 2);
+        assert times.length == 2 : "Event input must contain /to";
+        assert !times[0].trim().isEmpty() : "Event start time should not be empty";
+        assert !times[1].trim().isEmpty() : "Event end time should not be empty";
+
         if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
             throw ElenaException.emptyEvent();
         }
