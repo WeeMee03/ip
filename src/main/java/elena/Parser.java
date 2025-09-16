@@ -9,17 +9,12 @@ import java.time.format.DateTimeParseException;
  * Only handles actual tasks: Todo, Deadline, Event.
  */
 public class Parser {
+
     private static final DateTimeFormatter INPUT_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
     private static final DateTimeFormatter OUTPUT_FORMAT =
             DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
 
-    /**
-     * Parses a user input string into a Task object.
-     * @param input user input
-     * @return Task object corresponding to input
-     * @throws ElenaException if input format or command is invalid
-     */
     public static Task parseTask(String input) throws ElenaException {
         String[] parts = input.split(" ", 2);
         String command = parts[0].toLowerCase();
@@ -49,6 +44,7 @@ public class Parser {
         if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
             throw ElenaException.emptyDeadline();
         }
+
         LocalDateTime by = parseDateTime(parts[1].trim());
         return new Deadline(parts[0].trim(), formatDateTime(by));
     }

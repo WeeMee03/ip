@@ -5,10 +5,11 @@ package elena;
  */
 public class Deadline extends Task {
     /** The due date/time of the task in formatted string. */
-    protected String by;
+    private final String by;
 
     /**
      * Constructs a new Deadline task.
+     *
      * @param description task description
      * @param by due date/time in formatted string
      */
@@ -19,6 +20,7 @@ public class Deadline extends Task {
 
     /**
      * Returns the string format used for saving this task to storage.
+     *
      * @return formatted string for storage
      */
     @Override
@@ -28,6 +30,7 @@ public class Deadline extends Task {
 
     /**
      * Returns a string representation of the task for display to the user.
+     *
      * @return string describing the task
      */
     @Override

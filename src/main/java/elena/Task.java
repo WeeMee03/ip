@@ -8,6 +8,12 @@ public abstract class Task {
     protected boolean isDone;
     protected TaskType type;
 
+    /**
+     * Constructs a Task with a description and type.
+     *
+     * @param description task description
+     * @param type task type
+     */
     public Task(String description, TaskType type) {
         this.description = description;
         this.type = type;
@@ -15,13 +21,19 @@ public abstract class Task {
     }
 
     /** Marks the task as done. */
-    public void markAsDone() { isDone = true; }
+    public void markAsDone() {
+        isDone = true;
+    }
 
     /** Marks the task as not done. */
-    public void markAsNotDone() { isDone = false; }
+    public void markAsNotDone() {
+        isDone = false;
+    }
 
     /** Returns true if the task is done. */
-    public boolean isDone() { return isDone; }
+    public boolean isDone() {
+        return isDone;
+    }
 
     /** Returns the string used for saving to file. */
     public abstract String toSaveFormat();

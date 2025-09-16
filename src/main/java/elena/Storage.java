@@ -2,35 +2,28 @@ package elena;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.nio.file.*;
-import java.time.LocalDateTime;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.format.DateTimeFormatter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Handles saving and loading tasks to/from a text file.
+ * Handles saving and loading tasks to and from a text file.
  */
 public class Storage {
 
-    private final Path filePath;
     private static final DateTimeFormatter INPUT_FORMAT =
             DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
 
-    /**
-     * Constructs a Storage object.
-     * @param filePath path to the file where tasks are stored
-     */
+    private final Path filePath;
+
     public Storage(String filePath) {
         this.filePath = Paths.get(filePath);
     }
 
-    /**
-     * Loads tasks from the storage file.
-     * Creates file if it does not exist.
-     * Skips corrupted lines.
-     * @return list of tasks
-     */
     public List<Task> load() {
         List<Task> tasks = new ArrayList<>();
         try {
@@ -48,17 +41,13 @@ public class Storage {
                     System.out.println("Skipping corrupted line: " + line);
                 }
             }
-
         } catch (IOException e) {
             System.out.println("Error loading file: " + e.getMessage());
         }
+
         return tasks;
     }
 
-    /**
-     * Saves all tasks to the storage file.
-     * @param tasks list of tasks to save
-     */
     public void save(List<Task> tasks) {
         try {
             Files.createDirectories(filePath.getParent());
@@ -73,12 +62,6 @@ public class Storage {
         }
     }
 
-    /**
-     * Decodes a single line from the storage file into a Task object.
-     * @param line the line from file
-     * @return the decoded Task
-     * @throws IllegalArgumentException if task type is invalid
-     */
     private Task decode(String line) {
         String[] parts = line.split(" \\| ");
         String type = parts[0];
@@ -103,17 +86,15 @@ public class Storage {
         if (isDone) {
             task.markAsDone();
         }
+
         return task;
     }
 
     private Task decodeDeadline(String[] parts) {
-        LocalDateTime by = LocalDateTime.parse(parts[3], INPUT_FORMAT);
         return new Deadline(parts[2], parts[3]);
     }
 
     private Task decodeEvent(String[] parts) {
-        LocalDateTime from = LocalDateTime.parse(parts[3], INPUT_FORMAT);
-        LocalDateTime to = LocalDateTime.parse(parts[4], INPUT_FORMAT);
         return new Event(parts[2], parts[3], parts[4]);
     }
 

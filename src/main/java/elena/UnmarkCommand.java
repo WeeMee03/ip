@@ -6,6 +6,11 @@ package elena;
 public class UnmarkCommand implements Command {
     private final String input;
 
+    /**
+     * Constructs an UnmarkCommand.
+     *
+     * @param input user input string
+     */
     public UnmarkCommand(String input) {
         this.input = input;
     }
@@ -22,7 +27,9 @@ public class UnmarkCommand implements Command {
     private int parseIndex(String input, String command) throws ElenaException {
         try {
             int idx = Integer.parseInt(input.split(" ")[1]) - 1;
-            if (idx < 0) throw ElenaException.invalidTaskNumber();
+            if (idx < 0) {
+                throw ElenaException.invalidTaskNumber();
+            }
             return idx;
         } catch (NumberFormatException e) {
             throw ElenaException.nonIntegerTaskNumber();
@@ -30,5 +37,7 @@ public class UnmarkCommand implements Command {
     }
 
     @Override
-    public boolean isExit() { return false; }
+    public boolean isExit() {
+        return false;
+    }
 }

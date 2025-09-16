@@ -10,5 +10,7 @@ public class ExitCommand implements Command {
     }
 
     @Override
-    public boolean isExit() { return true; }
+    public boolean isExit() {
+        return true;
+    }
 }

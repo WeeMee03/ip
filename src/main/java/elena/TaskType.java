@@ -4,11 +4,18 @@ package elena;
  * Enum for different task types.
  */
 public enum TaskType {
-    TODO("T"), DEADLINE("D"), EVENT("E");
+    TODO("T"),
+    DEADLINE("D"),
+    EVENT("E");
+
     private final String code;
 
-    TaskType(String code) { this.code = code; }
+    TaskType(String code) {
+        this.code = code;
+    }
 
     /** Returns the one-letter code for saving tasks. */
-    public String getCode() { return code; }
+    public String getCode() {
+        return code;
+    }
 }

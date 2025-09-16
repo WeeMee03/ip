@@ -12,6 +12,7 @@ public class Elena {
     /**
      * Entry point of the program.
      * Initializes storage, loads tasks, and enters the main command loop.
+     *
      * @param args command-line arguments (ignored)
      */
     public static void main(String[] args) {
@@ -43,7 +44,6 @@ public class Elena {
                     continue;
                 }
 
-                // Handle find command
                 if (handleFind(input, tasks)) {
                     continue;
                 }
@@ -101,6 +101,7 @@ public class Elena {
 
     /**
      * Handles mark and unmark commands for tasks.
+     *
      * @param input user input
      * @param tasks current list of tasks
      * @return true if handled, false otherwise
@@ -145,6 +146,7 @@ public class Elena {
 
     /**
      * Handles delete command for tasks.
+     *
      * @param input user input
      * @param tasks current list of tasks
      * @return true if handled, false otherwise
@@ -181,6 +183,7 @@ public class Elena {
 
     /**
      * Handles find command for tasks.
+     *
      * @param input user input
      * @param tasks current list of tasks
      * @return true if handled, false otherwise
@@ -216,6 +219,7 @@ public class Elena {
 
     /**
      * Prints information about a newly added task.
+     *
      * @param task the task added
      * @param size current number of tasks
      */
@@ -240,6 +244,9 @@ public class Elena {
 
     /**
      * Generates a response for the user's chat message.
+     *
+     * @param input user input
+     * @return Elena's response string
      */
     public String getResponse(String input) {
         return "Elena heard: " + input;

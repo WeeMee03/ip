@@ -7,6 +7,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
+
 /**
  * Controller for the main GUI.
  */
@@ -22,22 +23,24 @@ public class MainWindow extends AnchorPane {
 
     private Elena elena;
 
-    private Image userImage = new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
-    private Image elenaImage = new Image(this.getClass().getResourceAsStream("/images/DaElena.jpg"));
+    private final Image userImage =
+            new Image(this.getClass().getResourceAsStream("/images/DaUser.png"));
+    private final Image elenaImage =
+            new Image(this.getClass().getResourceAsStream("/images/DaElena.jpg"));
 
     @FXML
     public void initialize() {
         scrollPane.vvalueProperty().bind(dialogContainer.heightProperty());
     }
 
-    /** Injects the Duke instance */
+    /** Injects the Elena instance. */
     public void setElena(Elena e) {
         elena = e;
     }
 
     /**
-     * Creates two dialog boxes, one echoing user input and the other containing Duke's reply and then appends them to
-     * the dialog container. Clears the user input after processing.
+     * Handles user input by creating dialog boxes for both user and Elena,
+     * appending them to the container, and clearing the input field.
      */
     @FXML
     private void handleUserInput() {

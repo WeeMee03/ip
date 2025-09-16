@@ -7,6 +7,13 @@ public class Event extends Task {
     private final String from;
     private final String to;
 
+    /**
+     * Constructs an Event task.
+     *
+     * @param description Description of the event.
+     * @param from        Start time.
+     * @param to          End time.
+     */
     public Event(String description, String from, String to) {
         super(description, TaskType.EVENT);
         this.from = from;
@@ -14,14 +21,19 @@ public class Event extends Task {
     }
 
     /** Returns the start time. */
-    public String getFrom() { return from; }
+    public String getFrom() {
+        return from;
+    }
 
     /** Returns the end time. */
-    public String getTo() { return to; }
+    public String getTo() {
+        return to;
+    }
 
     @Override
     public String toSaveFormat() {
-        return type.getCode() + " | " + (isDone ? "1" : "0") + " | " + description + " | " + from + " | " + to;
+        return type.getCode() + " | " + (isDone ? "1" : "0")
+                + " | " + description + " | " + from + " | " + to;
     }
 
     @Override

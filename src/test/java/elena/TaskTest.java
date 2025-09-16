@@ -1,13 +1,16 @@
 package elena;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import org.junit.jupiter.api.Test;
-import static org.junit.jupiter.api.Assertions.*;
 
 class TaskTest {
 
     @Test
     void markAsDoneAndNotDone_shouldToggleCorrectly() {
-        Task t = new Todo("read book"); // using Todo subclass
+        Task t = new Todo("read book");
         assertFalse(t.isDone(), "New task should not be done initially");
 
         t.markAsDone();
@@ -21,7 +24,7 @@ class TaskTest {
     void toString_shouldShowTypeAndStatus() {
         Task t = new Todo("buy milk");
 
-        String expectedNotDone = "[T][ ] buy milk";  // T from TaskType.TODO
+        String expectedNotDone = "[T][ ] buy milk";
         assertEquals(expectedNotDone, t.toString());
 
         t.markAsDone();

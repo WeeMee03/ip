@@ -16,6 +16,7 @@ public interface Command {
 
     /**
      * Indicates whether this command exits the application.
+     *
      * @return true if this command exits the program, false otherwise
      */
     boolean isExit();
