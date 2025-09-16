@@ -1,4 +1,9 @@
-package elena;
+package elena.core;
+
+import elena.tasks.Task;
+import elena.tasks.Todo;
+import elena.tasks.Deadline;
+import elena.tasks.Event;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;

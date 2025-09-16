@@ -1,4 +1,4 @@
-package elena;
+package elena.tasks;
 
 /**
  * Represents a Todo task.

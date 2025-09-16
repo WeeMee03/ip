@@ -1,4 +1,4 @@
-package elena;
+package elena.apps;
 
 import javafx.application.Application;
 

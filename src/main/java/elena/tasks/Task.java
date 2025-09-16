@@ -1,4 +1,4 @@
-package elena;
+package elena.tasks;
 
 /**
  * Abstract base class for all tasks.

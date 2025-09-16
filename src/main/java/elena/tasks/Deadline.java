@@ -1,4 +1,4 @@
-package elena;
+package elena.tasks;
 
 /**
  * Represents a task with a specific deadline.

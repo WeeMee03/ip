@@ -1,7 +1,9 @@
-package elena;
+package elena.apps;
 
 import java.io.IOException;
 
+import elena.ui.MainWindow;
+import elena.core.Elena;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;

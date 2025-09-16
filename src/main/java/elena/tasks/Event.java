@@ -1,4 +1,4 @@
-package elena;
+package elena.tasks;
 
 /**
  * Represents an Event task with a start and end time.

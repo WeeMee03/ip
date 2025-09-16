@@ -1,4 +1,4 @@
-package elena;
+package elena.core;
 
 /**
  * Represents an exception thrown by Elena for invalid input or operations.

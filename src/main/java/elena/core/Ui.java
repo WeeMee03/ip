@@ -1,4 +1,4 @@
-package elena;
+package elena.core;
 
 import java.util.Scanner;
 
@@ -16,7 +16,7 @@ public class Ui {
     /** Displays the welcome message. */
     public void showWelcome() {
         showLine();
-        System.out.println(" Hello! I'm elena.Elena 🤖");
+        System.out.println(" Hello! I'm elena.core.Elena 🤖");
         System.out.println(" What can I do for you?");
         showLine();
     }

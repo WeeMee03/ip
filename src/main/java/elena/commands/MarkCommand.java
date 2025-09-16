@@ -1,4 +1,10 @@
-package elena;
+package elena.commands;
+
+import elena.core.ElenaException;
+import elena.core.Storage;
+import elena.core.TaskList;
+import elena.core.Ui;
+import elena.tasks.Task;
 
 /**
  * Command to mark a task as done.

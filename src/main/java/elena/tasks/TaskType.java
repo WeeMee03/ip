@@ -1,4 +1,4 @@
-package elena;
+package elena.tasks;
 
 /**
  * Enum for different task types.

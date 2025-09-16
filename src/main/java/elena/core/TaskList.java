@@ -1,4 +1,6 @@
-package elena;
+package elena.core;
+
+import elena.tasks.Task;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-# elena.Elena User Guide
+# elena.core.Elena User Guide
 
 // Update the title above to match the actual product name
 

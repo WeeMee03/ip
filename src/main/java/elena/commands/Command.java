@@ -1,4 +1,9 @@
-package elena;
+package elena.commands;
+
+import elena.core.ElenaException;
+import elena.core.Storage;
+import elena.core.TaskList;
+import elena.core.Ui;
 
 /**
  * Interface representing a command in the application.

@@ -1,5 +1,13 @@
-package elena;
+package elena.core;
 
+import elena.tasks.Task;
+import elena.tasks.Deadline;
+import elena.tasks.Event;
+import elena.tasks.Todo;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
 
@@ -19,11 +27,13 @@ public class Elena {
         Scanner scanner = new Scanner(System.in);
         Storage storage = new Storage("./data/elena.txt");
         List<Task> tasks = storage.load();
+        assert tasks != null : "Task list must not be null after loading";
 
         printWelcomeMessage();
 
         while (true) {
             String input = scanner.nextLine().trim();
+            assert input != null : "User input should not be null";
 
             try {
                 if (handleExit(input)) {
@@ -50,6 +60,7 @@ public class Elena {
 
                 // Parse all other tasks through Parser
                 Task task = Parser.parseTask(input);
+                assert task != null : "Parsed task must not be null";
                 tasks.add(task);
                 printTaskAdded(task, tasks.size());
                 storage.save(tasks);
@@ -66,12 +77,13 @@ public class Elena {
 
     private static void printWelcomeMessage() {
         printLine();
-        System.out.println(" Hello! I'm elena.Elena 🤖");
+        System.out.println(" Hello! I'm elena.core.Elena 🤖");
         System.out.println(" What can I do for you?");
         printLine();
     }
 
     private static boolean handleExit(String input) {
+        assert input != null : "Input must not be null";
         if (input.equalsIgnoreCase("bye")) {
             printLine();
             System.out.println(" Bye. Hope to see you again soon!");
@@ -82,6 +94,8 @@ public class Elena {
     }
 
     private static boolean handleList(String input, List<Task> tasks) {
+        assert input != null : "Input must not be null";
+        assert tasks != null : "Task list must not be null";
         if (!input.equalsIgnoreCase("list")) {
             return false;
         }
@@ -92,6 +106,7 @@ public class Elena {
         } else {
             System.out.println(" Here are the tasks in your list:");
             for (int i = 0; i < tasks.size(); i++) {
+                assert tasks.get(i) != null : "Task must not be null in list";
                 System.out.println(" " + (i + 1) + ". " + tasks.get(i));
             }
         }
@@ -109,6 +124,9 @@ public class Elena {
      */
     private static boolean handleMarkUnmark(String input, List<Task> tasks)
             throws ElenaException {
+        assert input != null : "Input must not be null";
+        assert tasks != null : "Task list must not be null";
+
         boolean isMark = input.toLowerCase().startsWith("mark ");
         boolean isUnmark = input.toLowerCase().startsWith("unmark ");
         if (!isMark && !isUnmark) {
@@ -123,11 +141,13 @@ public class Elena {
 
         try {
             int index = Integer.parseInt(parts[1]) - 1;
+            assert index >= 0 : "Task index cannot be negative";
             if (index < 0 || index >= tasks.size()) {
                 throw ElenaException.invalidTaskNumber();
             }
 
             Task task = tasks.get(index);
+            assert task != null : "Task at index must not be null";
             printLine();
             if (isMark) {
                 task.markAsDone();
@@ -154,6 +174,9 @@ public class Elena {
      */
     private static boolean handleDelete(String input, List<Task> tasks)
             throws ElenaException {
+        assert input != null : "Input must not be null";
+        assert tasks != null : "Task list must not be null";
+
         if (!input.toLowerCase().startsWith("delete ")) {
             return false;
         }
@@ -165,11 +188,13 @@ public class Elena {
 
         try {
             int index = Integer.parseInt(parts[1]) - 1;
+            assert index >= 0 : "Task index cannot be negative";
             if (index < 0 || index >= tasks.size()) {
                 throw ElenaException.invalidTaskNumber();
             }
 
             Task removed = tasks.remove(index);
+            assert removed != null : "Removed task must not be null";
             printLine();
             System.out.println(" Noted. I've removed this task:");
             System.out.println("   " + removed);
@@ -191,6 +216,9 @@ public class Elena {
      */
     private static boolean handleFind(String input, List<Task> tasks)
             throws ElenaException {
+        assert input != null : "Input must not be null";
+        assert tasks != null : "Task list must not be null";
+
         if (!input.toLowerCase().startsWith("find ")) {
             return false;
         }
@@ -205,6 +233,7 @@ public class Elena {
         int count = 0;
         for (int i = 0; i < tasks.size(); i++) {
             Task task = tasks.get(i);
+            assert task != null : "Task must not be null when searching";
             if (task.toString().toLowerCase().contains(keyword.toLowerCase())) {
                 count++;
                 System.out.println(" " + count + ". " + task);
@@ -224,6 +253,8 @@ public class Elena {
      * @param size current number of tasks
      */
     private static void printTaskAdded(Task task, int size) {
+        assert task != null : "Task added must not be null";
+        assert size >= 0 : "Task list size must be non-negative";
         printLine();
         System.out.println(" Got it. I've added this task:");
         System.out.println("   " + task);
@@ -237,6 +268,7 @@ public class Elena {
     }
 
     private static void printError(String message) {
+        assert message != null : "Error message must not be null";
         printLine();
         System.out.println(" OOPS!!! " + message);
         printLine();
@@ -249,6 +281,82 @@ public class Elena {
      * @return Elena's response string
      */
     public String getResponse(String input) {
+        assert input != null : "Input to getResponse must not be null";
         return "Elena heard: " + input;
+    }
+
+    /**
+     * Parses user input into Task objects.
+     * Only handles actual tasks: Todo, Deadline, Event.
+     */
+    public static class Parser {
+
+        private static final DateTimeFormatter INPUT_FORMAT =
+                DateTimeFormatter.ofPattern("yyyy-MM-dd HHmm");
+        private static final DateTimeFormatter OUTPUT_FORMAT =
+                DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
+
+        public static Task parseTask(String input) throws ElenaException {
+            String[] parts = input.split(" ", 2);
+            String command = parts[0].toLowerCase();
+            String rest = parts.length > 1 ? parts[1].trim() : "";
+
+            switch (command) {
+                case "todo":
+                    return parseTodo(rest);
+                case "deadline":
+                    return parseDeadline(rest);
+                case "event":
+                    return parseEvent(rest);
+                default:
+                    throw ElenaException.invalidCommand(input);
+            }
+        }
+
+        private static Todo parseTodo(String rest) throws ElenaException {
+            if (rest.isEmpty()) {
+                throw ElenaException.emptyTodo();
+            }
+            return new Todo(rest);
+        }
+
+        private static Deadline parseDeadline(String rest) throws ElenaException {
+            String[] parts = rest.split("/by", 2);
+            if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+                throw ElenaException.emptyDeadline();
+            }
+
+            LocalDateTime by = parseDateTime(parts[1].trim());
+            return new Deadline(parts[0].trim(), formatDateTime(by));
+        }
+
+        private static Event parseEvent(String rest) throws ElenaException {
+            String[] parts = rest.split("/from", 2);
+            if (parts.length < 2 || parts[0].trim().isEmpty()) {
+                throw ElenaException.emptyEvent();
+            }
+
+            String[] times = parts[1].split("/to", 2);
+            if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
+                throw ElenaException.emptyEvent();
+            }
+
+            LocalDateTime from = parseDateTime(times[0].trim());
+            LocalDateTime to = parseDateTime(times[1].trim());
+            return new Event(parts[0].trim(), formatDateTime(from), formatDateTime(to));
+        }
+
+        private static LocalDateTime parseDateTime(String s) throws ElenaException {
+            try {
+                return LocalDateTime.parse(s, INPUT_FORMAT);
+            } catch (DateTimeParseException e) {
+                throw new ElenaException(
+                        "Invalid date/time format! Use yyyy-MM-dd HHmm. Example: 2025-09-02 1800");
+            }
+        }
+
+        private static String formatDateTime(LocalDateTime dt) {
+            return dt.format(OUTPUT_FORMAT);
+        }
     }
 }

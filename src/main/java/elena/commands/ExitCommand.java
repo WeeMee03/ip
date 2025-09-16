@@ -1,4 +1,8 @@
-package elena;
+package elena.commands;
+
+import elena.core.Storage;
+import elena.core.TaskList;
+import elena.core.Ui;
 
 /**
  * Command to exit the program.
