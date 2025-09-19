@@ -38,6 +38,7 @@ public class Event extends Task {
 
     @Override
     public String toString() {
-        return super.toString() + " (from: " + from + " to: " + to + ")";
+        return "[" + type.getCode() + "]" + super.toString().substring(3)
+                + " (from: " + from + " to: " + to + ")";
     }
 }

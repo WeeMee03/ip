@@ -43,8 +43,9 @@ public abstract class Task {
         return description;
     }
 
+    /** Returns a display-friendly string of the task. */
     @Override
     public String toString() {
-        return "[" + type.getCode() + "][" + (isDone ? "X" : " ") + "] " + description;
+        return "[" + (isDone ? "X" : " ") + "] " + description;
     }
 }

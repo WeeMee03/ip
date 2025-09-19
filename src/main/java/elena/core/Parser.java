@@ -20,6 +20,13 @@ public class Parser {
     private static final DateTimeFormatter OUTPUT_FORMAT =
             DateTimeFormatter.ofPattern("MMM dd yyyy HH:mm");
 
+    /**
+     * Parses a string input into a Task object.
+     *
+     * @param input user input
+     * @return Task object
+     * @throws ElenaException if input is invalid
+     */
     public static Task parseTask(String input) throws ElenaException {
         assert input != null : "Input should not be null";
 
@@ -40,43 +47,24 @@ public class Parser {
     }
 
     private static Todo parseTodo(String rest) throws ElenaException {
-        assert rest != null : "Todo description should not be null";
-        assert !rest.isEmpty() : "Todo description should not be empty";
-
-        if (rest.isEmpty()) {
-            throw ElenaException.emptyTodo();
-        }
+        if (rest.isEmpty()) throw ElenaException.emptyTodo();
         return new Todo(rest);
     }
 
     private static Deadline parseDeadline(String rest) throws ElenaException {
-        assert rest != null : "Deadline input should not be null";
-
         String[] parts = rest.split("/by", 2);
-        assert parts.length == 2 : "Deadline must have a /by part";
-        assert !parts[0].trim().isEmpty() : "Deadline description should not be empty";
-        assert !parts[1].trim().isEmpty() : "Deadline date/time should not be empty";
-
         if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
             throw ElenaException.emptyDeadline();
         }
-
         LocalDateTime by = parseDateTime(parts[1].trim());
         return new Deadline(parts[0].trim(), formatDateTime(by));
     }
 
     private static Event parseEvent(String rest) throws ElenaException {
-        assert rest != null : "Event input should not be null";
-
         String[] parts = rest.split("/from", 2);
-        assert parts.length == 2 : "Event must have /from part";
-        assert !parts[0].trim().isEmpty() : "Event description should not be empty";
+        if (parts.length < 2 || parts[0].trim().isEmpty()) throw ElenaException.emptyEvent();
 
         String[] times = parts[1].split("/to", 2);
-        assert times.length == 2 : "Event must have /to part";
-        assert !times[0].trim().isEmpty() : "Event start time should not be empty";
-        assert !times[1].trim().isEmpty() : "Event end time should not be empty";
-
         if (times.length < 2 || times[0].trim().isEmpty() || times[1].trim().isEmpty()) {
             throw ElenaException.emptyEvent();
         }
@@ -87,8 +75,6 @@ public class Parser {
     }
 
     private static LocalDateTime parseDateTime(String s) throws ElenaException {
-        assert s != null : "Date/time string should not be null";
-
         try {
             return LocalDateTime.parse(s, INPUT_FORMAT);
         } catch (DateTimeParseException e) {
@@ -98,7 +84,6 @@ public class Parser {
     }
 
     private static String formatDateTime(LocalDateTime dt) {
-        assert dt != null : "Date/time object should not be null";
         return dt.format(OUTPUT_FORMAT);
     }
 }

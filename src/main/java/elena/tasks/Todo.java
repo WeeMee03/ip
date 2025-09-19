@@ -18,4 +18,9 @@ public class Todo extends Task {
     public String toSaveFormat() {
         return type.getCode() + " | " + (isDone ? "1" : "0") + " | " + description;
     }
+
+    @Override
+    public String toString() {
+        return "[" + type.getCode() + "]" + super.toString();
+    }
 }

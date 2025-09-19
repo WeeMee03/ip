@@ -33,7 +33,7 @@ test {
 }
 
 application {
-    mainClass.set("elena.Launcher")
+    mainClass.set("elena.apps.Launcher")
 }
 
 shadowJar {

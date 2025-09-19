@@ -18,23 +18,15 @@ public class Deadline extends Task {
         this.by = by;
     }
 
-    /**
-     * Returns the string format used for saving this task to storage.
-     *
-     * @return formatted string for storage
-     */
+    /** Returns the string format used for saving this task to storage. */
     @Override
     public String toSaveFormat() {
-        return "D | " + (isDone ? "1" : "0") + " | " + description + " | " + by;
+        return type.getCode() + " | " + (isDone ? "1" : "0") + " | " + description + " | " + by;
     }
 
-    /**
-     * Returns a string representation of the task for display to the user.
-     *
-     * @return string describing the task
-     */
+    /** Returns a string representation of the task for display to the user. */
     @Override
     public String toString() {
-        return "[D]" + super.toString().substring(3) + " (by: " + by + ")";
+        return "[" + type.getCode() + "]" + super.toString().substring(3) + " (by: " + by + ")";
     }
 }
