@@ -6,7 +6,8 @@ package elena.tasks;
 public enum TaskType {
     TODO("T"),
     DEADLINE("D"),
-    EVENT("E");
+    EVENT("E"),
+    RECURRING("R");
 
     private final String code;
 

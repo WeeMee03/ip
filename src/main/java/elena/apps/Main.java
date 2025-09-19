@@ -14,7 +14,7 @@ import javafx.stage.Stage;
  * A GUI for Elena using FXML.
  */
 public class Main extends Application {
-    private final Elena elena = new Elena();
+    private final Elena elena = new Elena("./data/elena.txt");
 
     @Override
     public void start(Stage stage) {

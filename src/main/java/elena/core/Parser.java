@@ -4,6 +4,7 @@ import elena.tasks.Task;
 import elena.tasks.Todo;
 import elena.tasks.Deadline;
 import elena.tasks.Event;
+import elena.tasks.Recurring;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -41,9 +42,21 @@ public class Parser {
                 return parseDeadline(rest);
             case "event":
                 return parseEvent(rest);
+            case "recurring":
+                return parseRecurring(rest);
             default:
                 throw ElenaException.invalidCommand(input);
         }
+    }
+
+    private static Recurring parseRecurring(String rest) throws ElenaException {
+        String[] parts = rest.split("/recur", 2);
+        if (parts.length < 2 || parts[0].trim().isEmpty() || parts[1].trim().isEmpty()) {
+            throw new ElenaException("Usage: recurring <description> /recur <daily|weekly|monthly>");
+        }
+        String description = parts[0].trim();
+        String recurrence = parts[1].trim().toLowerCase();
+        return new Recurring(description, recurrence);
     }
 
     private static Todo parseTodo(String rest) throws ElenaException {
