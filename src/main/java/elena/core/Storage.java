@@ -1,9 +1,10 @@
 package elena.core;
 
 import elena.tasks.Task;
+import elena.tasks.Todo;
 import elena.tasks.Deadline;
 import elena.tasks.Event;
-import elena.tasks.Todo;
+import elena.tasks.Recurring;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -83,6 +84,9 @@ public class Storage {
             case "E":
                 task = decodeEvent(parts);
                 break;
+            case "R":
+                task = decodeRecurring(parts);
+                break;
             default:
                 throw new IllegalArgumentException("Invalid task type: " + type);
         }
@@ -92,6 +96,10 @@ public class Storage {
         }
 
         return task;
+    }
+
+    private Task decodeRecurring(String[] parts) {
+        return new Recurring(parts[2], parts[3]);
     }
 
     private Task decodeDeadline(String[] parts) {

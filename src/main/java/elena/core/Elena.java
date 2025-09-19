@@ -248,4 +248,31 @@ public class Elena {
         assert input != null : "Input to getResponse must not be null";
         return "Elena heard: " + input;
     }
+
+    /**
+     * Handles user input from GUI and returns a response string.
+     */
+    public String handleInput(String input) {
+        if (input == null || input.isEmpty()) return "";
+        try {
+            if (handleCommand(input)) {
+                return "Bye. Hope to see you again soon!";
+            }
+        } catch (ElenaException e) {
+            return "OOPS!!! " + e.getMessage();
+        } catch (Exception e) {
+            return "Unexpected error: " + e.getMessage();
+        }
+
+        // For 'list' command, we want the task list as a string
+        if (input.toLowerCase().startsWith("list")) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < tasks.size(); i++) {
+                sb.append(i + 1).append(". ").append(tasks.get(i)).append("\n");
+            }
+            return sb.toString();
+        }
+
+        return "Task updated.";
+    }
 }
