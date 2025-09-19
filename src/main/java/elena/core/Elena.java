@@ -275,4 +275,14 @@ public class Elena {
 
         return "Task updated.";
     }
+
+    /**
+     * Returns the welcome message for ElenaBot.
+     *
+     * @return welcome message as a string
+     */
+    public String getWelcomeMessage() {
+        return "Hello! I'm Elena 🤖\nWhat can I do for you?";
+    }
+
 }

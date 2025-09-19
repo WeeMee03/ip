@@ -37,6 +37,9 @@ public class MainWindow extends AnchorPane {
     /** Injects the Elena instance. */
     public void setElena(Elena e) {
         elena = e;
+        dialogContainer.getChildren().add(
+                DialogBox.getDukeDialog(elena.getWelcomeMessage(), elenaImage)
+        );
     }
 
     /**
